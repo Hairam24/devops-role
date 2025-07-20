@@ -1,0 +1,56 @@
+JENKINS: (t2.medium 12GB)
+
+ sudo su -
+ hostnamectl set-hostname jenkins.example.com
+ bash
+ passwd root
+ yum update –y
+ wget -O /etc/yum.repos.d/jenkins.repo \
+     https://pkg.jenkins.io/redhat-stable/jenkins.repo
+ rpm --import https://pkg.jenkins.io/redhat-stable/jenkins.io-2023.key
+ yum upgrade
+ yum install java-17-amazon-corretto -y
+ yum install jenkins -y
+ systemctl enable jenkins
+ systemctl start jenkins
+ systemctl status jenkins
+ yum install git -y
+ yum install maven
+ mvn -v  (copy the path for java and maven and paste it in Dashboard > manage Jenkins > tools > add java , maven )
+
+
+ ip:8080 open this using public ip
+
+
+ cat /var/lib/jenkins/secrets/initialAdminPassword   ( copy the key and paste it in Jenkins)
+ ( configure Jenkins)
+
+ add the webhook (Jenkins > profile > security > add key (copy key) > go to git repo setting > add webhook > ip:8080/github-webhook/
+                                                                                                             json
+                                                                                                             paste key
+                                                                                                             add webhook
+
+ Dashboard > manage plugin > available plugin > install maven, GitHub in, deployer
+ 
+ copy the path for java and maven and paste it in Dashboard > manage Jenkins > tools > add java , maven
+
+ new iteam > maven project > (project_name: maven) > ok > paste git http link  and change /master to /main > save and apply 
+
+ Build now
+
+
+
+ssh-keygen
+(add pub key to docker)
+(add docker pub key to Jenkins authorized_keys)
+
+cd /etc/ssh/sshd_config
+(edit rootpermit and first yes)
+
+systemctl restart sshd
+systemctl enable sshd
+
+
+finally after build and docker sshd_config :
+
+rsync -avh /var/lib/jenkins/workspace/maven* root@172.31.17.57:/opt
