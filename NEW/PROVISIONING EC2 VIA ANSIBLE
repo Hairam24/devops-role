@@ -1,0 +1,133 @@
+PROVISIONING EC2 VIA ANSIBLE :
+
+sudo su -
+yum install ansible*
+hostnamectl set-hostname ansible.example.com
+bash
+ansible --version
+mkdir -p /etc/ansible
+cd /etc/ansible
+vim ansible.cfg   (PAST THE FILE)
+ll
+cd
+ansible --version
+cd /etc/ansible
+ansible-galaxy collection install amazon.aws
+ansible-galaxy collection install amazon.aws --force
+yum install pip*
+yum install python*
+yum install python* --allowerasing
+yum install python* --allowerasing --skip-broken
+pip install boto
+pip install boto3
+dig google.com
+
+
+
+vim hosts     (CREATE THE LOCALHOST)
+[
+[localhost]
+localhost
+localhost ansible_connection=local ansible_python_interpreter=/usr/bin/python3
+]
+
+
+
+cd
+ssh-keygen
+ansible localhost --list-host
+
+curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+unzip awscliv2.zip
+sudo ./aws/install
+
+
+aws configure
+	
+
+
+cd /etc/ansible
+
+
+
+vim creds.yaml  (PAST THE KEYS)
+[
+---
+aws_access_key: 
+aws_secret_key: 
+]
+
+
+
+ll
+
+
+
+vim ec2.yaml   (ENTER THE CODE FOR EC2)
+[
+---
+- name: creating ec2 instance
+  hosts: localhost
+  vars_files:
+    - creds.yaml
+
+  tasks:
+    - name: creating EC2 instance via Ansible
+      amazon.aws.ec2_instance:
+        name: hari-instance
+        instance_type: t2.micro
+        image_id: ami-09e6f87a47903347c
+        vpc_subnet_id: subnet-00608da34c56e569d
+        region: us-east-1
+        count: 1
+        security_group: sg-0cd9a2b14bb27dd1a
+        key_name: aws_Ltimindtree
+        state: present
+]
+
+
+ansible-playbook ec2.yaml --syntax-check
+ansible-playbook ec2.yaml -C
+ansible-playbook ec2.yaml
+
+#######################################################################################################################################
+
+
+
+vim ec2.yaml   (MAKE IT medium)
+ansible-playbook ec2.yaml
+
+cp ec2.yaml worker-ec2.yaml
+ll
+vim worker-ec2.yaml   (rename- worker, t2.micro, count -2)
+ansible-playbook worker-ec2.yaml
+
+(change worker name one and two in instance dashboard)
+
+(run all the instances master and two workers)
+
+vim hosts
+[
+[localhost]
+localhost
+localhost ansible_connection=local ansible_python_interpreter=/usr/bin/python3
+                                                                                                                             [master]                                                                                                                     172.31.27.5                                                                                                                                                                                                                                               [worker]                                                                                                                     172.31.29.51                                                                                                                 172.31.24.196  
+]
+
+
+ssh-keygen
+cat  /root/.ssh/id_rsa.pub
+
+----->IN master and two workers
+      cd .ssh/
+      ll
+      vim authorized_keys  (PASTE THE KEY)
+
+ansible 172.31.27.5 -m command -a 'hostnamectl set-hostname master.example.com'   (paste the required ip)
+bash                                                                              (in requires instance)
+
+
+
+
+
+TO CLOSE IN THE STATE make it absent............................................................
