@@ -1,0 +1,151 @@
+ANSIBLE BASICS:
+
+ Create a EC2 Instance called ansible container
+-> sudo su -
+-> hostnamectl set-hostname ansible-controller.example.com
+-> bash
+*********************************************
+Create a EC2 Instance called ansible one
+-> sudo su -
+-> hostnamectl set-hostname ans-one.example.com
+-> bash
+*********************************************
+Create a EC2 Instance called ansible two
+-> sudo su -
+-> hostnamectl set-hostname ans-two.example.com
+-> bash
+*********************************************
+
+T1 : vim /etc/hosts
+(paste ip and hostnames)
+
+T2 : vim /etc/hosts
+(paste ip and hostnames)
+
+T3 : vim /etc/hosts
+(paste ip and hostnames)
+
+*********************************************
+
+T1: passwd root
+	redhat
+	redhat
+
+T2: passwd root
+	redhat
+	redhat
+
+T3: passwd root
+	redhat
+	redhat
+
+*********************************************
+t2 & t3
+vim /etc/ssh/sshd_config
+(do changes)
+systemctl restart sshd
+systemctl enable sshd
+
+*********************************************
+
+T1:
+scp /etc/hosts root@(node-one-ip):/etc/hosts
+scp /etc/hosts root@(node-two-ip):/etc/hosts
+
+*********************************************
+
+T1:
+yum install ansible*
+ansible --version
+mkdir -p /etc/ansible
+ll -d /etc/ansible
+cd /etc/ansible
+vim ansible.cfg
+
+*********************************************
+
+T1:
+ansible --version
+cd
+ssh-keygen
+ssh-copy-id root@(node-one-name)
+ssh-copy-id root@(node-two-name)
+
+ssh root@(node-one-name)
+ssh root@(node-two-name)
+
+cd /etc/ansible
+vim hosts
+
+***************************
+
+[dev-servers]
+(node-one-name)
+[prod-servers]
+(node-two-name)
+
+***************************
+
+ansible all -m ping
+ vim simple-playbook.yaml
+
+*************************************
+
+- name: This is a simple playbook
+  hosts: all
+  tasks:
+    - name: Installed Apache
+      yum:
+        name: httpd
+        state: present
+ 
+- name: Started Apache service
+  hosts: all
+  tasks:
+    - name: Start and enable Apache
+      systemd:
+        name: httpd
+        state: started
+        enabled: true
+ 
+- name: Configure basic Apache
+  hosts: all
+  tasks:
+    - name: Installed httpd
+      dnf:
+        name: httpd
+        state: latest
+ 
+    - name: Copied index.html
+      copy:
+        src: index.html
+        dest: /var/www/html/index.html
+ 
+    - name: Started httpd
+      systemd:
+        name: httpd
+        state: started
+        enabled: true
+
+
+*****************************************************
+
+cat > index.html
+Hi i am ansible
+ctrl + D
+
+************************************************
+
+ansible-playbook simple-playbook.yaml --syntax-check
+ansible-playbook simple-playbook.yaml -C
+ansible-playbook simple-playbook.yaml
+
+**********************************************
+
+T2 & T3 : cd /var/www/html
+          cat index.html
+
+
+**********************************************
+
+copy public ip of T2 and T3 paste it in browser
