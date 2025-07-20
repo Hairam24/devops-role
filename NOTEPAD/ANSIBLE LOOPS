@@ -1,0 +1,88 @@
+ANSIBLE LOOPS:
+
+sudo su -
+hostnamectl set-hostname controller.example.com
+bash
+passwd root
+ip a s
+hostname
+vim /etc/hosts
+ [paste the IP and hostname]
+yum install ansible*
+cd /etc/ansible
+vim ansible.cfg
+vim hosts  
+     [dev-server]
+     ans-one.example.com
+ssh-keygen
+ssh-copy-id root@ans-one.example.com
+
+ssh root@ans-one.example.com
+
+
+
+
+multiple-file-copy###############################################################################################################
+
+---
+- name: copy files
+  hosts: all
+  tasks:
+    - name: copy files
+      copy:
+        src: "{{ item }}"
+        dest: /tmp
+      loop:
+        - /etc/group
+        - /etc/fstab
+        - /etc/passwd
+        - /etc/shadow
+
+multiple-user-add################################################################################################################
+
+---
+- name: create multiple users
+  hosts: all
+  tasks:
+    - name: create multiple users
+      user:
+        name: "{{ item }}"
+        state: present
+      loop:
+        - sanjaya
+        - drcula
+        - ironman
+
+fstab-copy#######################################################################################################################
+
+---
+- name: This is a sample playbook
+  hosts: all
+ 
+  tasks:
+    - name: Installing Apache
+      yum:
+        name: httpd
+        state: present
+ 
+    - name: Copy fstab
+      copy:
+        src: /etc/fstab
+        dest: /tmp/fstab
+ 
+    - name: Start and enable httpd
+      systemd:
+        name: httpd
+        state: started
+        enabled: true
+...
+
+
+
+[
+  rpmquery httpd
+  systemctl status httpd
+
+]
+##################################################################################################################################
+
