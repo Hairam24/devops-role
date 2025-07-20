@@ -1,0 +1,27 @@
+ANSIBLE USERADD:
+(cd /etc/passwd)
+
+---
+- name: this is sample playbook
+  hosts: all
+  tasks:
+    - name: creating user
+      user:
+        name: sachin
+        uid: 1300
+        home: /heros
+        shell: /bin/bash
+        state: present
+    - name: installing apache
+      yum:
+        name: httpd
+        state: present
+    - name: install cifs
+      yum:
+        name: cifs-utils
+        state: present
+    - name: install vsftpd
+      dnf:
+        name: vsftpd
+        state: latest
+...
