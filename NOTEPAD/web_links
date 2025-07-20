@@ -1,0 +1,14 @@
+FROM tomcat:latest
+RUN cp -R  /usr/local/tomcat/webapps.dist/*  /usr/local/tomcat/webapps
+COPY ./*.war /usr/local/tomcat/webapps
+
+
+https://spacelift.io/blog/terraform-kubernetes-deployment
+
+https://aws.plainenglish.io/deploying-a-web-app-on-aws-s3-using-github-actions-d7031160acac
+
+https://github.com/mansi-lti/terraform/blob/main/azure
+
+https://github.com/Hymanreddykotla/kubernetes/blob/main/kubernetes
+
+https://github.com/balabk260103/dev-ops
