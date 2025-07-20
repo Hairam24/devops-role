@@ -1,0 +1,26 @@
+DOCKER:
+
+(attach the role)
+
+sudo su -
+hostnamectl set-hostname docker.example.com
+bash
+passwd root
+yum install docker*
+
+ssh-keygen
+(past the docker pub to Jenkins and Jenkins pub to docker authorized_keys)
+
+vim /etc/ssh/sshd_config
+systemctl restart sshd
+systemctl enable sshd
+
+
+(after rsync run in Jenkins)
+cd /opt
+cd maven/
+
+CREATE A ECR :
+(paste the push cmds in /maven folder)
+--image will be pushed into ECR
+
