@@ -1,0 +1,81 @@
+GITHUB ACTIONS:
+
+--create a public repo in GitHub.
+
+--go to repo setting > secretes and variables > actions > new repo secret
+
+	AWS_ACCESS_KEY_ID  (also paste the aws access key)
+	(create another repo secrete)
+	AWS_SECRET_ACCESS_KEY (also paste the aws secret access key)
+
+
+--go to S3 bucket:
+	create bucket
+	general purpose
+	unique bucket name
+	ACLs enables
+	uncheck Block all public access (also tick check box)
+	enable bucket versioning
+	create bucket
+
+
+	go to permission > bucket policy
+	(paste the policy , replace the bucket name)
+
+####################################################################################################################
+
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "PublicReadForGetBucketObjects",
+            "Effect": "Allow",
+            "Principal": "*",
+            "Action": "s3:GetObject",
+            "Resource": "arn:aws:s3:::<bucket-name>/*"
+        }
+    ]
+}
+
+####################################################################################################################
+
+	go to properties > Static website hosting
+	(add index.html)
+
+
+--go to repo
+	create a index.html file ( <h1> Hariram <h1> )
+	create a file as .github/workflows/main.yml
+	(paste the main.yaml file)
+
+###################################################################################################################
+
+
+name: Upload Website
+
+on:
+  push:
+    branches:
+    - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v1
+
+    - name: Configure AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: us-east-1
+
+    - name: Deploy static site to S3 bucket
+      run: aws s3 sync . s3://devops2003 --delete
+
+##################################################################################################################
+
+--commit it 
+--copy paste the statis host ip and paste it in the browser , the index.html will be displayed.
