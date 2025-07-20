@@ -1,0 +1,30 @@
+DOCKER and CONTAINER
+
+Create an Instance:
+
+Docker can be installed in two ways:
+
+1) Through cmd yum install docker.
+2) Through Docker repo - goto docker install - choose the machine - follow the cmds
+
+After installation: To run Ubuntu Container
+
+GOTO to Docker HUB --> search ubuntu -> click official image and copy the cmd
+
+cmds:
+
+sudo su -
+hostnamectl set-hostname docker.example.com
+bash
+yum install docker
+systemctl restart docker
+systemctl enable docker
+docker info
+docker images
+docker --help
+docker pull ubuntu
+docker images ls
+docker pull httpd
+docker ps -a
+
+
