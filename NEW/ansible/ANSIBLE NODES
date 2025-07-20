@@ -1,0 +1,20 @@
+ANSIBLE NODES:
+
+sudo su -
+hostnamectl set-hostname ans-one.example.com
+bash
+passwd root
+
+ip a s
+hostname
+vim /etc/hosts
+
+vim /etc/ssh/sshd_config
+   PermitRootLogin yes
+   PasswordAuthentication yes
+
+systemctl restart sshd
+systemctl enable sshd
+
+cat /etc/passwd | grep -i hari     (USER PRESENT after status present in controller)
+cat /etc/passwd | grep -i hari     (USER ABSENT after status absent in controller)
