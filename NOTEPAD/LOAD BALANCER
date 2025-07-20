@@ -1,0 +1,39 @@
+LOAD BALANCER:
+
+(create 3 instance with different zones)
+
+sudo su -
+hostnamectl set-hostname web1.example.com
+bash
+yum install httpd -y
+cd /var/www/html
+vim index.html
+systemctl start httpd
+systemctl enable httpd
+systemctl stop httpd
+systemctl restart httpd
+
+
+(paste the public ip of the instances and check whether the web page is visible)
+
+-----go to target group 
+	create a target group
+	give name and create
+	add instances and include as pending below
+	create
+
+-----go to load balancer
+	application load balancer
+	give name
+	select the instance zones
+	choose security group
+	select target group
+	create
+
+
+-----copy the link in load balancer and paste it in browser
+    	refresh and check whether all the three zone index is visible
+
+-----now stop one instance httpd
+	refresh and check it will have BAD  GATEWAY and after sometime it will gone
+	also check it in target group for healthy and unhealthy pages.
