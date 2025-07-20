@@ -1,0 +1,27 @@
+TERRAFORM creating ec2 with existing sg:
+
+
+data "aws_security_group" "previous-sg" {
+  id = "sg-0cd9a2b14bb27dd1a" #existing security group id
+}
+
+#ec2 code for the custom public key
+resource "aws_key_pair" "new-key-pair" {
+  key_name   = "new-key-pair"
+  public_key = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDQjx1b3yTjdnGQge3z62/rl5A0kdKkYxRlB3q7MXAbs5WoR8ePbdGDjrC1JiXSAkeWLG7MPCqM1eedDK82bKZZCmuhB7IUABAPXizOiHthsHggGZ7D8Ao7wTfXjJtL92c3xq2IsKzEHByhwSdK4WEoicl0ydW26jYcUeYGUP2mR1UhpstgbmBE+OnDo74rGzUykcjvRAWkqBGZHit8xW2oaaTLDnHMDWM78g6xIPjxy74SM25Xe0uCuWdKjMVSFVAUBKXM99QMSaAb6GiUNMejcG2Iy1/nCYXfGrU82RjKyi8C9+MTrQRYYWXf0CJGKdx0TAdWIWU47n75Wtjp2c3wIj70pkK/5Xje1UAoXQOX5QxpY3WYieGvOffOSa1GCQA/i3XG8abpvmEZ7lJ8ZgDgfKKZ+7phF89sRhDZ5CGmnpkc7h4S7FV6Q/ysD6YdZL72NvqhFCwLVKETo2uQGpPtvzZxBxQdjjxu8a1Suu6h6qjRt1mUsvBVh5Wp0vro/Lk= root@terraform.example.com"
+}
+
+#ec2 instance code starts here
+resource "aws_instance" "custom-server" {
+  ami                    = "ami-05ffe3c48a9991133"
+  availability_zone      = "us-east-1a"
+  instance_type          = "t2.micro"
+  vpc_security_group_ids = [data.aws_security_group.previous-sg.id]
+  key_name               = "new-key-pair"
+
+  tags = {
+    Name     = "existing-sg"
+    Stage    = "testing"
+    Location = "India"
+  }
+}
