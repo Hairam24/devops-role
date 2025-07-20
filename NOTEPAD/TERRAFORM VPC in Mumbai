@@ -1,0 +1,305 @@
+TERRAFORM VPC in Mumbai:
+
+create a instance :
+
+install terraform
+	(for amazon Linux)
+	sudo dnf install -y dnf-plugins-core
+ 	sudo dnf config-manager --add-repo https://rpm.releases.hashicorp.com/AmazonLinux/hashicorp.repo
+	sudo dnf -y install terraform
+
+create a IAM user :
+	provide access to 
+		Admin full access
+		VPC full access
+		Ec2 full access
+	create a access key.
+
+install aws cli:
+
+
+curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+unzip awscliv2.zip
+sudo ./aws/install
+
+
+aws configure
+		(add the credentials)
+
+create a project directory:
+	cd /
+	mkdir /vpc
+	cd /vpc
+	vim vpc.tf
+	terraform init         (for initialization)
+	terraform fmt          (to make the order correct)
+	terraform validate     (to validate)
+	terraform plan         (for dry run)
+	terraform apply        (to run)
+	terraform destroy      (to delete)
+
+
+#############################################################################################################
+
+provider "aws" {
+
+  region = "ap-south-1"
+
+}
+
+#This is VPC code
+
+resource "aws_vpc" "test-vpc" {
+
+  cidr_block = "10.0.0.0/16"
+
+}
+
+# this is Subnet code
+
+resource "aws_subnet" "public-subnet" {
+
+  vpc_id = aws_vpc.test-vpc.id
+
+  availability_zone = "ap-south-1a"
+
+  cidr_block = "10.0.0.0/24"
+
+  tags = {
+
+    Name = "Public-subnet"
+
+  }
+
+}
+
+
+resource "aws_subnet" "private-subnet" {
+
+  vpc_id = aws_vpc.test-vpc.id
+
+  availability_zone = "ap-south-1a"
+
+  cidr_block = "10.0.1.0/24"
+
+  tags = {
+
+    Name = "Private-subnet" #security group
+
+  }
+
+}
+
+resource "aws_security_group" "test_access" {
+
+  name = "test_access"
+
+  vpc_id = aws_vpc.test-vpc.id
+
+  description = "allow ssh and http"
+
+  ingress {
+
+    from_port = 80
+
+    to_port = 80
+
+    protocol = "tcp"
+
+    cidr_blocks = ["0.0.0.0/0"]
+
+  }
+
+  ingress {
+
+    from_port = 22
+
+    to_port = 22
+
+    protocol = "tcp"
+
+    cidr_blocks = ["0.0.0.0/0"]
+
+  }
+
+  egress {
+
+    from_port = 0
+
+    to_port = 0
+
+    protocol = "-1"
+
+    cidr_blocks = ["0.0.0.0/0"]
+
+  }
+
+
+}
+
+#security group end here#internet gateway code
+
+resource "aws_internet_gateway" "test-igw" {
+
+  vpc_id = aws_vpc.test-vpc.id
+
+  tags = {
+
+    Name = "test-igw"
+
+  }
+
+}
+
+
+#Public route table code
+
+resource "aws_route_table" "public-rt" {
+
+  vpc_id = aws_vpc.test-vpc.id
+
+  route {
+
+    cidr_block = "0.0.0.0/0"
+
+    gateway_id = aws_internet_gateway.test-igw.id
+
+  }
+
+
+  tags = {
+
+    Name = "public-rt"
+
+  }
+
+}
+
+#route Tatable assosication code
+
+resource "aws_route_table_association" "public-asso" {
+
+  subnet_id = aws_subnet.public-subnet.id
+
+  route_table_id = aws_route_table.public-rt.id
+
+}
+
+#ec2 code
+
+resource "aws_instance" "hari-server" {
+
+  ami = "ami-0d03cb826412c6b0f"
+
+  subnet_id = aws_subnet.public-subnet.id
+
+  instance_type = "t2.micro"
+
+  security_groups = ["${aws_security_group.test_access.id}"]
+
+  key_name = "test"
+
+  tags = {
+
+    Name = "test-World"
+
+    Stage = "testing"
+
+    Location = "chennai"
+
+  }
+
+}
+
+
+##create an EIP for EC2
+
+resource "aws_eip" "hari-ec2-eip" {
+
+  instance = aws_instance.hari-server.id
+
+}
+
+#ssh keypair code
+
+resource "aws_key_pair" "hari-mumbai" {
+
+  key_name = "hari-mumbai"
+
+  public_key = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCSZhkor3UhhBQzcUSVuubK8pFufoq7TILebIR69mp8F8h4WzMXX1e9A7qEgmo1qODScnvf22KuFF014tdS9kApjnI3c3SaxUr2vUue955CoM6JuD7UcVfi/1jTwOnRdErqq4T51pw9FAbLxPti+3IT9NxXL6dwT3EvhBxyeKUd/z0K8TbUD2oQOvx9FMjDNXHLDK2pHdi8eNREgVd4aS//bmakuCSir47dM1qxkZ/t5HcKJCHI9IK+kBEJtS476U6XBVjrcC8msCYorWjwC/v124Y7XCYN0gM0o2HwtjE8P47fuRGh+A7fGqm+u04FrO6e59VSsOQ80NjIWygYPir3yGIInnoOtgvNyB0p4KeHNRiDgHk4AjAOTXYTYEKfSfGnQ/x9MXZF0ou8I2qa3Ec881YabASbR1WOhGMg2NU4cgBUES6q/H/TtbrIT3o6okQ4SivDVL+jApPJ1gXypMLUoLcfB28J8oRHXSJ/r347du+YKP7JbIpkulJgrH9Q8m8= root@vpc.example.com"
+}
+
+resource "aws_instance" "database-server" {
+
+  ami = "ami-0d03cb826412c6b0f"
+
+  subnet_id = aws_subnet.private-subnet.id
+
+  instance_type = "t2.micro"
+
+  security_groups = ["${aws_security_group.test_access.id}"]
+
+  key_name = "hari-mumbai"
+
+  tags = {
+
+    Name = "db-World"
+
+    Stage = "stage-base"
+
+    Location = "delhi"
+
+  }
+
+}
+
+##create a public ip for Nat gateway
+
+resource "aws_eip" "nat-eip" {
+
+}
+
+### create Nat gateway
+
+resource "aws_nat_gateway" "my-ngw" {
+
+  allocation_id = aws_eip.nat-eip.id
+
+  subnet_id = aws_subnet.public-subnet.id
+
+}
+
+#create private route table
+
+resource "aws_route_table" "private-rt" {
+
+  vpc_id = aws_vpc.test-vpc.id
+
+  route {
+
+    cidr_block = "0.0.0.0/0"
+
+    gateway_id = aws_nat_gateway.my-ngw.id
+
+  }
+
+
+  tags = {
+
+    Name = "private-rt"
+
+  }
+
+}
+
+##route Tatable assosication code
+
+resource "aws_route_table_association" "private-asso" {
+
+  subnet_id = aws_subnet.private-subnet.id
+
+  route_table_id = aws_route_table.private-rt.id
+
+}
+
+##########################################################################################################
