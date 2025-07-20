@@ -1,0 +1,70 @@
+ANSIBLE CONTROLLER:
+
+sudo su -
+hostnamectl set-hostname controller.example.com
+bash
+passwd root
+ip a s
+hostname
+vim /etc/hosts
+
+scp /etc/hosts root@172.31.28.135:/etc/hosts
+scp /etc/hosts root@172.31.16.32:/etc/hosts
+
+yum install ansible*
+ansible --version    (NO CONFIG FILE)
+mkdir -p /etc/ansible
+ll -d /etc/ansible
+cd /etc/ansible
+ll
+vim ansible.cfg   (COPY PASTE FROM THE GITHUB ANSIBLE.CONFIG CODE)
+cd
+ansible --version    (CONFIG FILE PRESENT)
+
+ping ans-one.example.com
+ping ans-two.example.com
+
+ssh-keygen
+ssh-copy-id root@ans-one.example.com
+ssh-copy-id root@ans-two.example.com
+
+ssh root@ans-one.example.com
+ssh root@ans-two.example.com
+
+cd /etc/ansible
+vim hosts  
+     [dev-server]
+     ans-one.example.com
+
+     [prod-server]
+     ans-two.example.com
+
+ansible all -m ping
+ansible all -m ping -a data=hello
+ansible all -m ping -a data=hariram_nanthitha
+ansible all -m user -a 'name=hari uid=1200 home=/ltimindtree state=present'
+ansible all -m user -a 'name=hari uid=1200 home=/ltimindtree state=absent'
+
+
+ansible-doc -l
+ansible-doc user
+ansible-doc yum
+
+ansible all -m yum -a 'name=httpd state=present'
+ansible all -m file -a 'path=/tmp/hari.txt state=touch'
+ansible all -m file -a 'path=/tmp/my-directory state=directory'
+
+cd /mnt/
+ll      (NO FILE)
+
+(go to node and edit the hari.txt in cd /tmp folder)
+
+ansible ans-one.example.com -m fetch -a 'src=/tmp/hari.txt dest=/mnt'
+cd /mnt/
+ll      (FILE EXIST)
+cd ans-one.example.com
+cd tmp
+cat hari.txt
+
+
+
