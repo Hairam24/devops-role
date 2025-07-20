@@ -1,0 +1,100 @@
+https://support.console.aws.amazon.com/support/chatconnect
+
+
+
+
+
+Hello, my name is Himansi and I am here to assist you today. While I review your case details, would you please share your name with me?
+4:02 PM
+
+Hariram S
+4:03 PM
+
+
+please allow me couple of minutes to review your request.
+4:03 PM
+
+ok sir
+4:04 PM
+
+Thank you for hold
+I see you have request for BA
+
+can you please confirm if you have terminated active resources?
+4:11 PM
+
+I think so sir
+4:12 PM
+
+I see still EKS and VPCs are still active and is not been terminated.
+
+I will help you with steps to delete
+4:13 PM
+
+ok sir
+4:14 PM
+
+
+---- Deleting EKS Cluster ----
+
+>>Click here: https://us-east-1.console.aws.amazon.com/eks/clusters?region=us-east-1#
+>>Follow the steps outlined here: https://docs.aws.amazon.com/eks/latest/userguide/delete-cluster.html
+4:14 PM
+
+
+----Deleting a Elastic Network Interface-----
+To delete a Elastic Network Interfaces using the console, please follow the below steps:
+1. Click here: https://us-east-1.console.aws.amazon.com/ec2/home?region=us-east-1#NIC:
+2. Select the checkbox for the network interface >>>> choose Actions >>>> choose Delete
+4:15 PM
+
+ok sir
+4:16 PM
+
+i have deleted sir
+4:18 PM
+
+I still see eks cluster 'milestone-2' active, can you please recheck and confirm
+i see ENI are deleted.
+
+---- Deleting EKS Cluster ----
+
+>>Click here: https://us-east-1.console.aws.amazon.com/eks/clusters?region=us-east-1#
+>>Follow the steps outlined here: https://docs.aws.amazon.com/eks/latest/userguide/delete-cluster.html
+4:19 PM
+
+cluster is in deletion process sir
+4:20 PM
+
+
+yes, now I see it is deleted.
+4:21 PM
+
+
+I will just monitor your account for 24 hours so that final charges get updated in your billing and then I will proceed with Billing adjustment on your account.
+4:21 PM
+
+ok sir
+4:22 PM
+
+great
+
+Do you have anymore questions for me?
+4:22 PM
+
+No questions sir. Thank you sir for your assist.
+4:23 PM
+
+you are welcome
+please keep a check on your emails
+
+I will keep you posted via email.
+4:23 PM
+
+ok sir.
+4:23 PM
+
+can i leave the chat sir
+4:24 PM
+
+Thank you sir.
