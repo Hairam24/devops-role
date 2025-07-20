@@ -1,0 +1,29 @@
+DOCKER UBUNTU:
+
+sudo su -
+hostnamectl set-hostname docker.example.com
+bash
+yum install docker*
+systemctl restart docker
+systemctl enable docker
+docker info
+docker images
+docker pull ubuntu
+docker run -it --name my-web-hari -p 8081:80 ubuntu /bin/bash
+
+IN UBUNTU:
+
+apt update -y
+apt install apache2
+cd /var/www/html
+echo "Hi i am Hariram" > index.html
+service apache2 start   [Starting Apache httpd web server apache2 ]
+
+
+EXTRAS:
+
+docker ps -a
+docker stop DOCKER_ID    (To stop the container running)
+docker remove DOCKER_ID  (To delete the container)
+(docker run -itd --name my-web-hari -p 8081:80 ubuntu /bin/bash)
+docker attach DOCKER_ID  (To access the container)
